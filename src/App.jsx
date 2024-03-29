@@ -1,34 +1,59 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {
+  Button,
+  Title,
+  Container,
+  Group,
+  TextInput,
+  List,
+  Text,
+  Flex,
+} from '@mantine/core'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [value, setValue] = useState('');
+  const [todos, setTodos] = useState([]);
+  
+  const onSubmit = () => {
+    setTodos([...todos, value]);
+    setValue('');
+  };
+
+  const onDone = (index) => {
+    const newData = [...todos];
+    if (index > -1) {
+      newData.splice(index, 1);
+    }
+    setTodos(newData);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Container size="lg">
+      <Title size="xl" p="lg" style={{ textAlign: "center" }}>
+        Welcole To React Todo App
+      </Title>
+      <Group align="end">
+        <TextInput
+          label="Todo"
+          placeholder="Insert Your Todo Here"
+          onChange={(e)=> {
+            setValue(e.target.value)
+          }}
+          value={value}
+        />
+        <Button color="blue" onClick={onSubmit} disabled={!value}>Submit</Button>
+      </Group>
+      <List mt="lg">
+        {todos.length ? todos.map((todo, index) => (
+          <List.Item key={index} mb="lg">
+            <Flex gap="md">
+              <Text>{todo}</Text>
+              <Button color="green" onClick={()=> onDone(index)}>Done</Button>
+            </Flex>
+          </List.Item>
+        )): <Text>No Todos Available</Text>}
+      </List>
+    </Container>
   )
 }
 
